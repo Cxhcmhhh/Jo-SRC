@@ -11,6 +11,7 @@ Framework
 Installation
 ---
 After creating a virtual environment of python 3.6, run `pip install -r requirements.txt` to install all dependencies
+apex == 0.1 should be installed additionally.
 
 
 How to use
