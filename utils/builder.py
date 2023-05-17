@@ -6,7 +6,7 @@ from data.noisy_cifar import NoisyCIFAR10, NoisyCIFAR100
 from data.food101 import Food101
 from data.food101n import Food101N
 from data.clothing1m import Clothing1M
-
+from data.noisylabeln import NoisylabelN
 
 # dataset --------------------------------------------------------------------------------------------------------------------------------------------
 def build_transform(rescale_size=512, crop_size=448, s=1):
@@ -54,6 +54,10 @@ def build_food101n_dataset(root, train_transform, test_transform):
     test_data = Food101(os.path.join(root, 'food-101'), split='test', transform=test_transform)
     return {'train': train_data, 'test': test_data}
 
+def build_noisylabeln_dataset(root, train_transform, test_transform):
+    train_data = NoisylabelN(root, split='train', transform=train_transform)
+    test_data = NoisylabelN(root, split='test', transform=test_transform)
+    return {'train': train_data, 'test': test_data}
 
 def build_clothing1m_dataset(root, train_transform, test_transform):
     train_data = Clothing1M(root, split='train', transform=train_transform)
