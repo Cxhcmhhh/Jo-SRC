@@ -26,7 +26,7 @@ def is_image_file(filename, extensions):
 
 def find_classes(root):
     root = os.path.expanduser(root)
-    category_file = os.path.join(root, 'release', 'classes.txt')
+    category_file = os.path.join(root, 'classes.txt')
     classes = []
     with open(category_file, 'r') as f:
         lines = f.readlines()
