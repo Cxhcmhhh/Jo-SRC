@@ -32,76 +32,24 @@ def find_classes(root):
         lines = f.readlines()
     for line in lines:
         classes.append(line.strip())
-    assert len(classes) == 14, f'number of classes is expected to be 14, got {len(classes)}!'
+    assert len(classes) == 200, f'number of classes is expected to be 200, got {len(classes)}!'
     class_to_idx = {classes[i]: i for i in range(len(classes))}
     return classes, class_to_idx
 
 
-def make_samples_dict(root):
+def make_datasets(root, class_to_idx, extensions):
     root = os.path.expanduser(root)
-    clean_samples_dict = {}
-    noisy_samples_dict = {}
-    clean_samples_kv_annotation = os.path.join(root, 'annotations', 'clean_label_kv.txt')
-    noisy_samples_kv_annotation = os.path.join(root, 'annotations', 'noisy_label_kv.txt')
-    with open(clean_samples_kv_annotation, 'r') as f:
-        lines = f.readlines()
-        for line in lines:
-            path, label = line.strip().split(' ')
-            path = os.path.join(root, path)
-            label = int(label)
-            clean_samples_dict[path] = label
-    with open(noisy_samples_kv_annotation, 'r') as f:
-        lines = f.readlines()
-        for line in lines:
-            path, label = line.strip().split(' ')
-            path = os.path.join(root, path)
-            label = int(label)
-            noisy_samples_dict[path] = label
-    return clean_samples_dict, noisy_samples_dict
-
-
-def make_dataset(root, extensions, clean_samples_dict, noisy_samples_dict, split='train'):
-    root = os.path.expanduser(root)
-    instances = []     # item: image_path
-    true_labels = []   # item: human-annotated label
-    noisy_labels = []  # item: unreliable label
-
-    annotation_file_clean = os.path.join(root, 'annotations', f'clean_{split}_key_list.txt')  # 47570 lines
-    with open(annotation_file_clean, 'r') as f:
+    instances = []
+    labels = []
+    with open(os.path.join(root, 'meta', 'imagelist.tsv'), 'r') as f:
         lines = f.readlines()
     for line in lines:
-        path = line.strip()
-        path = os.path.join(root, path)
-        if is_image_file(path, extensions):
-            correct_label, unreliable_label = None, None
-            if path in noisy_samples_dict.keys():
-                unreliable_label = noisy_samples_dict[path]
-            if path in clean_samples_dict.keys():
-                correct_label = clean_samples_dict[path]
+        target_class, image_file_name = line.strip().split('/')
+        if is_image_file(image_file_name, extensions):
+            path = os.path.join(root, 'images', target_class, image_file_name)
             instances.append(path)
-            true_labels.append(correct_label)
-            noisy_labels.append(unreliable_label)
-
-    if split in ['val', 'test']:
-        return instances, true_labels, noisy_labels
-
-    annotation_file_noisy = os.path.join(root, 'annotations', 'noisy_train_key_list.txt')  # 1000000 lines
-    with open(annotation_file_noisy, 'r') as f:
-        lines = f.readlines()
-    for line in lines:
-        path = line.strip()
-        path = os.path.join(root, path)
-        if is_image_file(path, extensions):
-            correct_label, unreliable_label = None, None
-            if path in noisy_samples_dict.keys():
-                unreliable_label = noisy_samples_dict[path]
-            if path in clean_samples_dict.keys():
-                correct_label = clean_samples_dict[path]
-            instances.append(path)
-            true_labels.append(correct_label)
-            noisy_labels.append(unreliable_label)
-
-    return instances, true_labels, noisy_labels
+            labels.append(class_to_idx[target_class])
+    return instances, labels
 
 
 class NoisylabelN(VisionDataset):
@@ -199,7 +147,7 @@ class NoisylabelN(VisionDataset):
 
 
 if __name__ == '__main__':
-    train_data = Clothing1M('../Datasets/clothing1m', 'train')
+    train_data = Clothing1M('../Datasets/release', 'train')
     print('Train ---> ', train_data.n_samples)        # 1047570
     # val_data = Clothing1M('../Datasets/clothing1m', 'val')
     # print('Val   ---> ', val_data.n_samples)          #   14313
