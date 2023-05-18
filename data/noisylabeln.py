@@ -52,7 +52,7 @@ def make_dataset(root, extensions, split='train'):
             img_index, label_index = line.strip().split(' ')
             path = os.path.join(root, 'train', str(img_index).zfill(4)+'.jpg')
             instances.append(path)
-            labels.append(int(label_index))
+            labels.append(int(label_index) - 1)
         return instances, labels
 
     elif split in ['val', 'test']:
@@ -63,7 +63,7 @@ def make_dataset(root, extensions, split='train'):
             img_index, label_index = line.strip().split(' ')
             path = os.path.join(root, 'test', str(img_index).zfill(4)+'.jpg')
             instances.append(path)
-            labels.append(int(label_index))
+            labels.append(int(label_index) - 1)
         return instances, labels
 
 
