@@ -50,7 +50,7 @@ def make_dataset(root, extensions, split='train'):
             lines = f.readlines()
         for line in lines:
             img_index, label_index = line.strip().split(' ')
-            path = os.path.join(root, 'train', str_num.zfill(4)+'.jpg')
+            path = os.path.join(root, 'train', str(img_index).zfill(4)+'.jpg')
             instances.append(path)
             labels.append(label_index)
         return instances, labels
@@ -61,7 +61,7 @@ def make_dataset(root, extensions, split='train'):
             lines = f.readlines()
         for line in lines:
             img_index, label_index = line.strip().split(' ')
-            path = os.path.join(root, 'test', str_num.zfill(4)+'.jpg')
+            path = os.path.join(root, 'test', str(img_index).zfill(4)+'.jpg')
             instances.append(path)
             labels.append(label_index)
         return instances, labels
