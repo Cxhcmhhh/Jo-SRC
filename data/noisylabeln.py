@@ -32,24 +32,40 @@ def find_classes(root):
         lines = f.readlines()
     for line in lines:
         classes.append(line.strip())
-    assert len(classes) == 200, f'number of classes is expected to be 200, got {len(classes)}!'
+    assert len(classes) == 200, f'number of classes is expected to be 14, got {len(classes)}!'
     class_to_idx = {classes[i]: i for i in range(len(classes))}
     return classes, class_to_idx
 
 
-def make_datasets(root, class_to_idx, extensions):
+
+def make_dataset(root, extensions, split='train'):
     root = os.path.expanduser(root)
-    instances = []
-    labels = []
-    with open(os.path.join(root, 'meta', 'imagelist.tsv'), 'r') as f:
-        lines = f.readlines()
-    for line in lines:
-        target_class, image_file_name = line.strip().split('/')
-        if is_image_file(image_file_name, extensions):
-            path = os.path.join(root, 'images', target_class, image_file_name)
+    instances = []     # item: image_path
+    true_labels = []   # item: human-annotated label
+    labels = []  # item: unreliable label
+    
+    if split in ['train']:
+        annotation_file_clean = os.path.join(root, 'training_labels_noise_00.txt')  # 47570 lines
+        with open(annotation_file_clean, 'r') as f:
+            lines = f.readlines()
+        for line in lines:
+            img_index, label_index = line.strip().split(' ')
+            path = os.path.join(root, 'train', str_num.zfill(4)+'.jpg')
             instances.append(path)
-            labels.append(class_to_idx[target_class])
-    return instances, labels
+            labels.append(label_index)
+        return instances, labels
+
+    elif split in ['val', 'test']:
+        annotation_file_clean = os.path.join(root, 'test_labels.txt')  # 47570 lines
+        with open(annotation_file_clean, 'r') as f:
+            lines = f.readlines()
+        for line in lines:
+            img_index, label_index = line.strip().split(' ')
+            path = os.path.join(root, 'test', str_num.zfill(4)+'.jpg')
+            instances.append(path)
+            labels.append(label_index)
+        return instances, labels
+
 
 
 class NoisylabelN(VisionDataset):
@@ -63,9 +79,8 @@ class NoisylabelN(VisionDataset):
         self.loader = loader
         self.use_cache = use_cache
         classes, class_to_idx = find_classes(root)
-        clean_path2label, noisy_path2label = make_samples_dict(root)
 
-        samples, clean_labels, noisy_labels = make_dataset(root, self.image_extensions, clean_path2label, noisy_path2label, self.split)
+        samples, targets = make_dataset(root, self.image_extensions, self.split)
 
         if len(samples) == 0:
             raise (RuntimeError("Found 0 files in subfolders of: " + self.root + "\n"
@@ -73,9 +88,7 @@ class NoisylabelN(VisionDataset):
 
         self.n_samples = len(samples)
         self.samples = samples
-        self.clean_labels = clean_labels
-        self.noisy_labels = noisy_labels
-        self.targets = self.get_targets()
+        self.targets = targets
         self.classes = classes
         self.class_to_idx = class_to_idx
         self.loaded_samples = self._cache_dataset() if self.use_cache else None
@@ -147,7 +160,7 @@ class NoisylabelN(VisionDataset):
 
 
 if __name__ == '__main__':
-    train_data = Clothing1M('../Datasets/release', 'train')
+    train_data = NoisylabelN('../Datasets/release', 'train')
     print('Train ---> ', train_data.n_samples)        # 1047570
     # val_data = Clothing1M('../Datasets/clothing1m', 'val')
     # print('Val   ---> ', val_data.n_samples)          #   14313
