@@ -121,7 +121,7 @@ def main(cfg, device):
         dataset = build_food101n_dataset(os.path.join(cfg.database, cfg.dataset), CLDataTransform(transform['train']), transform['test'])
     elif cfg.dataset == 'clothing1m':
         dataset = build_clothing1m_dataset(os.path.join(cfg.database, cfg.dataset), CLDataTransform(transform['train']), transform['test'])
-    elif cfg.dataset == 'noisylabeln':
+    elif cfg.dataset == 'release':
         dataset = build_noisylabeln_dataset(os.path.join(cfg.database, cfg.dataset), CLDataTransform(transform['train']), transform['test'])
     else:
         raise AssertionError(f'{cfg.dataset} is not supported yet!')
