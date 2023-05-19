@@ -45,7 +45,7 @@ def make_dataset(root, extensions, split='train'):
     labels = []  # item: unreliable label
     
     if split in ['train']:
-        annotation_file_clean = os.path.join(root, 'training_labels_noise_00.txt')  # 47570 lines
+        annotation_file_clean = os.path.join(root, 'training_labels_noise_20.txt')  # 47570 lines
         with open(annotation_file_clean, 'r') as f:
             lines = f.readlines()
         for line in lines:
