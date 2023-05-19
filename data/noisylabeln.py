@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # ================================================================
-#   Copyright (C) 2019 * Ltd. All rights reserved.
 #
-#   @File        : clothing1m.py
-#   @Author      : Zeren Sun
-#   @Created date: 2020/7/5 4:43 PM
+#   @File        : noisylabeln.py
+#   @Author      : Xinhao Cai
+#   @Created date: 2023/5/18
 #   @Description :
 #
 # ================================================================
