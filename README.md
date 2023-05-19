@@ -1,11 +1,6 @@
 Introduction
 ---
-The source code and models for our paper **Jo-SRC: A Contrastive Approach for Combating Noisy Labels**
-
-
-Framework
----
-![framework](asserts/framework.jpg)
+find more on paper **Jo-SRC: A Contrastive Approach for Combating Noisy Labels**
 
 
 Installation
@@ -21,6 +16,7 @@ The code is currently tested only on GPU.
 - Data preparation
 
     Created a folder `Datasets` and download `cifar100`/`clothing1m`/`food101n` dataset into this folder.
+    I modify the code so it could be apply to another dataset.
 
 
 - Source code
@@ -31,6 +27,7 @@ The code is currently tested only on GPU.
         ```
         bash scripts/xxx.sh
         ```
+    - Change `data`/`noisylabeln.py` so that it works with different noise ratio.
 
 
 - Demo
