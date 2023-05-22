@@ -1,6 +1,6 @@
 Introduction
 ---
-find more on paper **Jo-SRC: A Contrastive Approach for Combating Noisy Labels**
+Find more on paper **Jo-SRC: A Contrastive Approach for Combating Noisy Labels**.
 
 
 Installation
