@@ -31,7 +31,7 @@ def find_classes(root):
         lines = f.readlines()
     for line in lines:
         classes.append(line.strip())
-    assert len(classes) == 200, f'number of classes is expected to be 14, got {len(classes)}!'
+    assert len(classes) == 200, f'number of classes is expected to be 200, got {len(classes)}!'
     class_to_idx = {classes[i]: i for i in range(len(classes))}
     return classes, class_to_idx
 
@@ -44,7 +44,7 @@ def make_dataset(root, extensions, split='train'):
     labels = []  # item: unreliable label
     
     if split in ['train']:
-        annotation_file_clean = os.path.join(root, 'training_labels_noise_80.txt')  # 47570 lines
+        annotation_file_clean = os.path.join(root, 'training_labels_noise_80.txt')
         with open(annotation_file_clean, 'r') as f:
             lines = f.readlines()
         for line in lines:
@@ -55,7 +55,7 @@ def make_dataset(root, extensions, split='train'):
         return instances, labels
 
     elif split in ['val', 'test']:
-        annotation_file_clean = os.path.join(root, 'test_labels.txt')  # 47570 lines
+        annotation_file_clean = os.path.join(root, 'test_labels.txt')
         with open(annotation_file_clean, 'r') as f:
             lines = f.readlines()
         for line in lines:
